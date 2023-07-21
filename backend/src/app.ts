@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as cors from 'cors';
 export class App {
   private app = express();
 
@@ -14,7 +15,8 @@ export class App {
       res.header('Access-Control-Allow-Headers', '*');
       next();
     };
-
+    
+    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(accessControl);
   }

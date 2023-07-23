@@ -22,7 +22,19 @@ export default {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 2,
+        references: {
+          model: 'roles',
+          key: 'id',
+        },
+        field: 'role_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      },
     },
   ),
   down: async (queryInterface: QueryInterface) => queryInterface.dropTable('users'),

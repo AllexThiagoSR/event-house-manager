@@ -16,8 +16,6 @@ export default class EventService {
       const newEvent = await this.model.create(event);
       return { status: 201 , data: newEvent };
     } catch (error) {
-      console.log(error);
-      
       return EventService.internalServerError as ServiceReturn<IEvent>;
     }
   }

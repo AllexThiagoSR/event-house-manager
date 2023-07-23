@@ -6,7 +6,7 @@ export class App {
   constructor() {
     this.config();
     this.app.get('/', (_req, res) => res.status(200).json('APP is running'));
-    this.routers();
+    // this.routers();
   }
   private config():void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
@@ -20,8 +20,6 @@ export class App {
     this.app.use(express.json());
     this.app.use(accessControl);
   }
-
-  private routers() {}
 
   public start(PORT: number | string) {
     this.app.listen(PORT);

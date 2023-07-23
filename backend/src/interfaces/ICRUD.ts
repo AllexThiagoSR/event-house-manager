@@ -1,5 +1,7 @@
+import NewEntity from "./NewEntity";
+
 export interface Create<T>{
-  create(data: Partial<T>): T;
+  create(data: NewEntity<T>): T;
 }
 
 export interface Read<T>{

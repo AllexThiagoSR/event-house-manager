@@ -16,5 +16,5 @@ export default {
       }
     }
   ),
-
+  down: async (queryInterface: QueryInterface) => queryInterface.dropTable('test'),
 }

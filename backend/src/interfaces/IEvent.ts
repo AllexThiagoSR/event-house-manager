@@ -4,4 +4,6 @@ export default interface IEvent {
   date: Date;
   time: string;
   privateEvent: boolean;
+  ticketsQuantity: number | null;
+  needTicket: boolean;
 }

@@ -28,6 +28,16 @@ export default {
         allowNull: false,
         field: 'private_event',
         defaultValue: false,
+      },
+      ticketsQuantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'tickets_quantity',
+      },
+      needTicket: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        field: 'need_ticket',
       }
     }
   ),

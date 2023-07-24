@@ -10,6 +10,8 @@ class SequelizeEvent extends Model<
   declare date: Date;
   declare time: string;
   declare privateEvent: boolean;
+  declare ticketsQuantity: number | null;
+  declare needTicket: boolean;
 }
 
 SequelizeEvent.init(
@@ -36,6 +38,14 @@ SequelizeEvent.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    ticketsQuantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    needTicket: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     }
   },
   {

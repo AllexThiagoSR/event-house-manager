@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import eventRouter from './event.routes';
-import LoginController from '../controllers/Login.controlle';
+import loginRouter from './login.routes';
 
 const router = Router();
-const loginController = new LoginController();
 
 router.use('/events', eventRouter);
 
-router.post('/login', (req, res) => loginController.login(req, res));
+router.use(loginRouter)
 
 export default router;

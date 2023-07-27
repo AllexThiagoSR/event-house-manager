@@ -1,3 +1,4 @@
+import BCrypt from '../utils/BCrypt';
 import ServiceReturn from '../interfaces/ServiceReturn';
 import UserModel from '../models/User.model';
 
@@ -12,7 +13,7 @@ export default class LoginService {
     Promise<ServiceReturn<{ token: string }>> {
     try {
       const user = await this.model.getByEmail(data.email);
-      if (!user || user.password !== data.password) {
+      if (!user || !BCrypt.compare(data.password, user.password)) {
         return { status: 401, data: { message: 'Unauthorized user' } };
       }
       return { status: 200, data: { token: 'Token válido' } }

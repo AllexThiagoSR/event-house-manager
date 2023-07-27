@@ -1,6 +1,7 @@
 import BCrypt from '../utils/BCrypt';
 import ServiceReturn from '../interfaces/ServiceReturn';
 import UserModel from '../models/User.model';
+import Token from '../utils/Token';
 
 export default class LoginService {
   private model: UserModel;
@@ -16,7 +17,12 @@ export default class LoginService {
       if (!user || !BCrypt.compare(data.password, user.password)) {
         return { status: 401, data: { message: 'Unauthorized user' } };
       }
-      return { status: 200, data: { token: 'Token válido' } }
+      const token = new Token().generateToken({
+        id: user.id,
+        name: user.name,
+        roleId: user.roleId,
+      })
+      return { status: 200, data: { token } }
     } catch (error) {
       return { status: 500, data: { message: 'Internal server error' } };
     }

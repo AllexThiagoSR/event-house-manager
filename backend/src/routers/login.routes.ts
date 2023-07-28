@@ -11,5 +11,4 @@ router.post(
   (req, res) => loginController.login(req, res)
 );
 
-
 export default router;

@@ -74,7 +74,7 @@ export default class EventService {
   }
 
   private static hasTickets(event: IEvent) {
-    if (event.ticketsQuantity && event.ticketsQuantity <= 0) {
+    if (event.ticketsQuantity !== null && event.ticketsQuantity <= 0) {
       throw new Error('No more tickets');
     }
   }

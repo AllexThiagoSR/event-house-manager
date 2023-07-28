@@ -38,6 +38,7 @@ export default {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         field: 'need_ticket',
+        defaultValue: false,
       }
     }
   ),

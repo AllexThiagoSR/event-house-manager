@@ -29,4 +29,14 @@ export default class EventService {
       return EventService.internalServerError as ServiceReturn<IEvent[]>;
     }
   }
+
+  async getById(id: number | string, user: Partial<IUser>): Promise<ServiceReturn<IEvent | null>>{
+    try {
+      const event = await this.model.getById(id, user.roleId === 1);
+      if (!event) return { status: 404, data: { message: 'Event not found' } };
+      return { status: 200, data: event };
+    } catch (error) {
+      return EventService.internalServerError as ServiceReturn<IEvent>;
+    }
+  }
 }

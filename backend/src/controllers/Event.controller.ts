@@ -17,4 +17,9 @@ export default class EventController {
     const { status, data } = await this.service.getAll(res.locals.user);
     return res.status(status).json(data);
   }
+
+  async getById(req: Request, res: Response) {
+    const { status, data } = await this.service.getById(req.params.id, res.locals.user);
+    return res.status(status).json(data);
+  }
 }

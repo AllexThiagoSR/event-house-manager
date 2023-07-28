@@ -25,10 +25,20 @@ export default class EventModel {
   async getAll(includeStats?: boolean) {
     const events = await this.model.findAll({
       where: {
-        privateEvent: includeStats || false,
+        privateEvent: includeStats ? [false, true] : false,
       },
       ...EventModel.include(includeStats),
     });
     return events;
+  }
+
+  async getById(id: number | string, includeStats?: boolean) {
+    const event = await this.model.findOne(
+      {
+        where: { id, privateEvent: includeStats ? [false, true] : false, },
+        ...EventModel.include(includeStats),
+      },
+    );
+    return event;
   }
 }

@@ -1,5 +1,8 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
-import db from ".";
+import {
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import db from '.';
+import SequelizeUser from './SequelizeUser';
+import SequelizeTicket from './SequelizeTicket';
 
 class SequelizeEvent extends Model<
   InferAttributes<SequelizeEvent>,
@@ -54,6 +57,26 @@ SequelizeEvent.init(
     underscored: true,
     timestamps: false,
   },
+);
+
+SequelizeEvent.belongsToMany(
+  SequelizeUser,
+  {
+    through: SequelizeTicket,
+    as: 'signedUsers',
+    foreignKey: 'eventId',
+    otherKey: 'userId',
+  },
+);
+
+SequelizeUser.belongsToMany(
+  SequelizeEvent,
+  {
+    through: SequelizeTicket,
+    as: 'signedEvents',
+    foreignKey: 'userId',
+    otherKey: 'eventId',
+  }
 );
 
 export default SequelizeEvent;

@@ -1,7 +1,8 @@
-import NewEntity from "../interfaces/NewEntity";
-import EventModel from "../models/Event.model";
-import IEvent from "../interfaces/IEvent";
-import ServiceReturn from "../interfaces/ServiceReturn";
+import NewEntity from '../interfaces/NewEntity';
+import EventModel from '../models/Event.model';
+import IEvent from '../interfaces/IEvent';
+import ServiceReturn from '../interfaces/ServiceReturn';
+import IUser from '../interfaces/IUser';
 
 export default class EventService {
   private model: EventModel;
@@ -20,10 +21,10 @@ export default class EventService {
     }
   }
 
-  async getAll(): Promise<ServiceReturn<IEvent[]>> {
+  async getAll(user: Partial<IUser>): Promise<ServiceReturn<IEvent[]>> {
     try {
-      const events = await this.model.getAll();
-      return { status: 200, data: events}
+      const events = await this.model.getAll(user.roleId === 1);
+      return { status: 200, data: events };
     } catch (error) {
       return EventService.internalServerError as ServiceReturn<IEvent[]>;
     }

@@ -1,6 +1,7 @@
-import IEvent from "../interfaces/IEvent";
-import SequelizeEvent from "../database/models/SequelizeEvent";
-import NewEntity from "../interfaces/NewEntity";
+import IEvent from '../interfaces/IEvent';
+import SequelizeEvent from '../database/models/SequelizeEvent';
+import NewEntity from '../interfaces/NewEntity';
+import SequelizeUser from '../database/models/SequelizeUser';
 
 export default class EventModel {
   model = SequelizeEvent;
@@ -10,8 +11,24 @@ export default class EventModel {
     return newEvent;
   }
 
-  async getAll() {
-    const events = await this.model.findAll();
+  private static include(includeStats?:boolean) {
+    return includeStats ? {
+      include: {
+        model: SequelizeUser,
+        through: { as: 'ticket', attributes: [] },
+        as: 'signedUsers',
+        attributes: { exclude: ['password'] },
+      }
+    } : {};
+  }
+
+  async getAll(includeStats?: boolean) {
+    const events = await this.model.findAll({
+      where: {
+        privateEvent: includeStats || false,
+      },
+      ...EventModel.include(includeStats),
+    });
     return events;
   }
 }

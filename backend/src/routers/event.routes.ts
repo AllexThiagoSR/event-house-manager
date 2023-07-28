@@ -1,10 +1,15 @@
-import { Router } from "express";
-import EventController from "../controllers/Event.controller";
+import { Router } from 'express';
+import EventController from '../controllers/Event.controller';
+import TokenValidation from '../middlewares/TokenValidation';
 
 const controller = new EventController();
 const router = Router();
 
-router.get('/', (req, res) => controller.getAll(req, res));
+router.get(
+  '/',
+  (req, res, next) => TokenValidation.validate(req, res, next),
+  (req, res) => controller.getAll(req, res),
+);
 
 router.post('/', (req, res) => controller.create(req, res));
 

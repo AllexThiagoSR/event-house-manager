@@ -22,4 +22,9 @@ export default class EventController {
     const { status, data } = await this.service.getById(req.params.id, res.locals.user);
     return res.status(status).json(data);
   }
+
+  async invite(req: Request, res: Response) {
+    const { status, data } = await this.service.invite(req.params.id, req.params.userId);
+    return res.status(status).json(data);
+  }
 }

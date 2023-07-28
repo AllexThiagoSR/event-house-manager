@@ -8,7 +8,7 @@ export default class EventModel {
 
   async create(event: NewEntity<IEvent>) {
     const newEvent = await this.model.create(event);
-    return newEvent;
+    return newEvent.dataValues;
   }
 
   private static include(includeStats?:boolean) {
@@ -35,10 +35,15 @@ export default class EventModel {
   async getById(id: number | string, includeStats?: boolean) {
     const event = await this.model.findOne(
       {
-        where: { id, privateEvent: includeStats ? [false, true] : false, },
+        where: { id, privateEvent: includeStats ? [false, true] : false },
         ...EventModel.include(includeStats),
       },
     );
+    return event?.dataValues;
+  }
+
+  async updateTicketsQuantity(id: number | string, newQuantity: number) {
+    const event = await this.model.update({ ticketsQuantity: newQuantity }, { where: { id } });
     return event;
   }
 }

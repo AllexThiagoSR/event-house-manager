@@ -19,4 +19,6 @@ router.get(
 
 router.post('/', (req, res) => controller.create(req, res));
 
+router.post('/:id/invite/:userId', (req, res) => controller.invite(req, res));
+
 export default router;

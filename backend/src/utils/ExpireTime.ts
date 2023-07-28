@@ -1,4 +1,4 @@
-import EntireDate from "../interfaces/Date";
+import EntireDate from '../interfaces/Date';
 
 export default class ExpireTime {
   private _date: Date;

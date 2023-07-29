@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import EventController from '../controllers/Event.controller';
 import TokenValidation from '../middlewares/TokenValidation';
+import EventValidation from '../middlewares/EventValidation';
 
 const controller = new EventController();
 const tokenMiddleware = new TokenValidation();
+const fieldsMiddleware = new EventValidation();
 const router = Router();
 
 router.get(
@@ -18,7 +20,13 @@ router.get(
   (req, res) => controller.getById(req, res),
 );
 
-router.post('/', (req, res) => controller.create(req, res));
+router.post(
+  '/',
+  (req, res, next) => tokenMiddleware.validate(req, res, next),
+  (req, res, next) => tokenMiddleware.validatePermission(req, res, next),
+  (req, res, next) => fieldsMiddleware.validate(req, res, next),
+  (req, res) => controller.create(req, res),
+);
 
 router.post(
   '/:id/invite/:userId',

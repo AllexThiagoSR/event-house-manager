@@ -15,6 +15,7 @@ export default {
           model: 'users',
         },
         onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       eventId: {
         type: DataTypes.INTEGER,
@@ -26,6 +27,7 @@ export default {
           model: 'events',
         },
         onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       ticketToken: {
         type: DataTypes.STRING,

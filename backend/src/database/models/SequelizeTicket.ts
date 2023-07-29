@@ -19,6 +19,7 @@ SequelizeTicket.init(
       primaryKey: true,
       allowNull: false,
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
       references: {
         key: 'id',
         model: 'users',
@@ -29,6 +30,7 @@ SequelizeTicket.init(
       primaryKey: true,
       allowNull: false,
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
       references: {
         key: 'id',
         model: 'events',

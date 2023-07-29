@@ -35,4 +35,11 @@ router.post(
   (req, res) => controller.invite(req, res),
 );
 
+router.delete(
+  '/:id',
+  (req, res, next) => tokenMiddleware.validate(req, res, next),
+  (req, res, next) => tokenMiddleware.validatePermission(req, res, next),
+  (req, res) => controller.deleteEvent(req, res),
+);
+
 export default router;

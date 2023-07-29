@@ -107,4 +107,15 @@ export default class EventService {
       return this.mapErrors(error as Error);
     }
   }
+
+  async deleteEvent(id: string | number): Promise<ServiceReturn<undefined>> {
+    try {
+      await this.model.deleteEvent(id);
+      return { status: 204, data: undefined };
+    } catch (error) {
+      console.log(error);
+      
+      return EventService.internalServerError;
+    }
+  }
 }

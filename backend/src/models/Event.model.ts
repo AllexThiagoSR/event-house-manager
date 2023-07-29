@@ -11,6 +11,11 @@ export default class EventModel {
     return newEvent.dataValues;
   }
 
+  async deleteEvent(id: string | number) {
+    const deleted = await this.model.destroy({ where: { id } });
+    return deleted;
+  }
+
   private static include(includeStats?:boolean) {
     return includeStats ? {
       include: {

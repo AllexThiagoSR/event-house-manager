@@ -7,13 +7,16 @@ import ExpireTime from '../utils/ExpireTime';
 import UserModel from '../models/User.model';
 import Token from '../utils/Token';
 import TicketModel from '../models/Ticket.model';
+import Mailer from '../utils/Mailer';
 
 type mappedErrors = 'internalError' | 'noTickets' | 'notFound' | 'userNotFound' 
   | 'eventHasPassed' | 'needInvite' | 'doNotNeedInvite';
+
 export default class EventService {
   private model: EventModel;
   private userModel: UserModel;
   private ticketModel: TicketModel;
+  private mailer: Mailer;
 
   private static errors = {
     internalError: { 
@@ -36,10 +39,12 @@ export default class EventService {
     model: EventModel = new EventModel(),
     userModel: UserModel = new UserModel(),
     ticketModel: TicketModel = new TicketModel(),
+    mailer: Mailer = new Mailer(),
   ) {
     this.model = model;
     this.userModel = userModel;
     this.ticketModel = ticketModel
+    this.mailer = mailer;
   }
 
   private mapErrors(error: Error): ErrorReturn {
@@ -97,7 +102,7 @@ export default class EventService {
 
   private async createTicket(
     userId: number | string, event: IEvent,
-  ): Promise<string | null> {
+  ): Promise<{ token: string | null, userEmail: string}> {
     const user = await this.userModel.getById(userId);
     if (!user) {
       const err = new Error();
@@ -109,7 +114,7 @@ export default class EventService {
     if (event.ticketsQuantity) {
       this.model.updateTicketsQuantity(event.id, event.ticketsQuantity - 1);
     }
-    return token;
+    return { token, userEmail: user.email };
   }
 
   private static hasTickets(event: IEvent) {
@@ -120,20 +125,46 @@ export default class EventService {
     }
   }
 
+  private async sendInviteMail(to: string, token: string, event: IEvent) {
+    const body = `
+    <h2>You were invite to an event</h2>
+    <p>Description: ${event.description}</p>
+    <p>Date: ${event.date}</p>
+    <p>Time: ${event.time}</p>
+    <p>Ticket: ${token}</p>`;
+    await this.mailer.sendMail(
+      'allexthiagodev@gmail.com',
+      to,
+      'Invite confirmation',
+      body,
+    );
+  }
+
+  private async sendSignMail(to: string, event: IEvent, token?: string) {
+    const body = `
+    <h2>You signed to an event</h2>
+    <p>Description: ${event.description}</p>
+    <p>Date: ${event.date}</p>
+    <p>Time: ${event.time}</p>
+    ${token ? `<p>Ticket: ${token}</p>` : ''}`;
+    await this.mailer.sendMail(
+      'allexthiagodev@gmail.com',
+      to,
+      'Sign confirmation',
+      body,
+    );
+  }
+
   async invite(
     id: number | string,
     userId: number | string,
   ): Promise<ServiceReturn<{ message: 'User invited' }>> {
     try {
       const event = await this.findEvent(id, true);
-      if (!event.privateEvent) {
-        const err = new Error();
-        err.name = 'doNotNeedInvite';
-        throw err;
-      }
+      if (!event.privateEvent) { const err = new Error(); err.name = 'doNotNeedInvite'; throw err; }
       EventService.hasTickets(event);
-      /*const ticketToken = */await this.createTicket(userId, event);
-      // Enviar um email para a pessoa convidada com o token
+      const { token, userEmail } = await this.createTicket(userId, event);
+      this.sendInviteMail(userEmail, token as string, event);
       return { status: 200, data: { message: 'User invited' } };
     } catch (error) {
       return this.mapErrors(error as Error);
@@ -147,12 +178,8 @@ export default class EventService {
       const event = await this.findEvent(id);
       if (event.privateEvent) { const err = new Error(); err.name = 'needInvite'; throw err; }
       EventService.hasTickets(event);
-      const ticketToken = await this.createTicket(userId, event);
-      if (ticketToken) {
-        // Enviar um email com o token
-      } else {
-        // Evniar um email sem o token
-      }
+      const { token, userEmail } = await this.createTicket(userId, event);
+      this.sendSignMail(userEmail, event, token as string | undefined);
       return { status: 200, data: { message: 'User signed' } };
     } catch (error) {
       return this.mapErrors(error as Error);

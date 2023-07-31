@@ -28,6 +28,13 @@ export default class EventController {
     return res.status(status).json(data);
   }
 
+  async sign(req: Request, res: Response) {
+    const { id } = req.params;
+    const { id: userId } = res.locals.user;
+    const { status, data } = await this.service.sign(id, userId);
+    return res.status(status).json(data);
+  }
+
   async deleteEvent(req: Request, res: Response) {
     const { status, data } = await this.service.deleteEvent(req.params.id);
     return res.status(status).json(data);

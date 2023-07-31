@@ -29,6 +29,12 @@ router.post(
 );
 
 router.post(
+  '/:id/sign',
+  (req, res, next) => tokenMiddleware.validate(req, res, next),
+  (req, res) => controller.sign(req, res),
+);
+
+router.post(
   '/:id/invite/:userId',
   (req, res, next) => tokenMiddleware.validate(req, res, next),
   (req, res, next) => tokenMiddleware.validatePermission(req, res, next),

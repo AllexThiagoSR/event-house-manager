@@ -10,6 +10,7 @@ import TicketModel from '../models/Ticket.model';
 import Mailer from '../utils/Mailer';
 import EventsErrorsResponse from '../utils/EventsErrorsResponse';
 import { MappedErrors } from '../utils/EventsErrorsResponse';
+import EventWithUsers from '../interfaces/EventWithUsers';
 
 export default class EventService {
   private model: EventModel;
@@ -117,7 +118,7 @@ export default class EventService {
       if (!event.privateEvent) { const err = new Error(); err.name = 'doNotNeedInvite'; throw err; }
       EventService.hasTickets(event);
       const { token, userEmail } = await this.createTicket(userId, event);
-      this.mailer.sendInviteMail(userEmail, token as string, event);
+      this.mailer.sendInviteEventMail(userEmail, event, token as string);
       return { status: 200, data: { message: 'User invited' } };
     } catch (error) {
       return this.mapErrors(error as Error);
@@ -128,7 +129,7 @@ export default class EventService {
     id: number | string, userId: string | number,
   ): Promise<ServiceReturn<{ message: 'User signed' | 'You were invited to this event' }>> {
     try {
-      if (await this.ticketModel.getByUserAndEventIds(userId, id)) {
+      if ((await this.ticketModel.getByUserAndEventIds(userId, id))?.ticketToken) {
         return {
           status: 200,
           data: { message: 'You were invited to this event' },
@@ -138,7 +139,7 @@ export default class EventService {
       if (event.privateEvent) { const err = new Error(); err.name = 'needInvite'; throw err; }
       EventService.hasTickets(event);
       const { token, userEmail } = await this.createTicket(userId, event);
-      this.mailer.sendSignMail(userEmail, event, token as string | undefined);
+      this.mailer.sendSignEventMail(userEmail, event, token as string | undefined);
       return { status: 200, data: { message: 'User signed' } };
     } catch (error) {
       return this.mapErrors(error as Error);
@@ -147,6 +148,9 @@ export default class EventService {
 
   async deleteEvent(id: string | number): Promise<ServiceReturn<undefined>> {
     try {
+      const event = await this.findEvent(id, true);
+      if (!event) { const err = new Error(); err.name = 'notFound'; throw err; }
+      this.mailer.sendManyMails(event as EventWithUsers, 'Deleted');
       await this.model.deleteEvent(id);
       return { status: 204, data: undefined };
     } catch (error) {

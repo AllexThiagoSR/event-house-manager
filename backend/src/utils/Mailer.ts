@@ -1,6 +1,7 @@
 import * as nodeMailer from 'nodemailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 import IEvent from '../interfaces/IEvent';
+import EventWithUsers from '../interfaces/EventWithUsers';
 
 export default class Mailer {
   private transporter: nodeMailer.Transporter;
@@ -21,9 +22,9 @@ export default class Mailer {
     this.adminMail = adminMail;
   }
 
-  async sendMail(to: string, subject:string, html: string) {
+  async sendMail(from: string, to: string, subject:string, html: string) {
     const retorno = await this.transporter.sendMail({
-      from: this.adminMail,
+      from,
       to,
       subject,
       html,
@@ -32,7 +33,7 @@ export default class Mailer {
     return retorno;
   }
 
-  async sendInviteMail(to: string, token: string, event: IEvent) {
+  async sendInviteEventMail(to: string, event: IEvent, token: string) {
     const body = `
     <h2>You were invite to an event</h2>
     <p>Description: ${event.description}</p>
@@ -40,13 +41,14 @@ export default class Mailer {
     <p>Time: ${event.time}</p>
     <p>Ticket: ${token}</p>`;
     await this.sendMail(
+      this.adminMail,
       to,
       'Invite confirmation',
       body,
     );
   }
 
-  async sendSignMail(to: string, event: IEvent, token?: string) {
+  async sendSignEventMail(to: string, event: IEvent, token?: string) {
     const body = `
     <h2>You signed to an event</h2>
     <p>Description: ${event.description}</p>
@@ -54,9 +56,33 @@ export default class Mailer {
     <p>Time: ${event.time}</p>
     ${token ? `<p>Ticket: ${token}</p>` : ''}`;
     await this.sendMail(
+      this.adminMail,
       to,
       'Sign confirmation',
       body,
     );
+  }
+
+  async sendDeletedEventMail(to: string, event: IEvent) {
+    const body = `
+    <h2>Canceled event</h2>
+    <p>A event that you were registered was canceled</p>
+    <p>Description: ${event.description}</p>
+    <p>Date: ${event.date}</p>
+    <p>Time: ${event.time}</p>
+    `;
+    await this.sendMail(
+      this.adminMail,
+      to,
+      'Cancellation notification',
+      body,
+    );
+  }
+
+  async sendManyMails(event: EventWithUsers, type: 'Deleted') {
+    event.signedUsers.forEach(async ({ email }) => {
+      await this[`send${type}EventMail`](email, event);
+      console.log('Mail sent');
+    });
   }
 }

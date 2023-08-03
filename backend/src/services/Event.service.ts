@@ -8,9 +8,8 @@ import UserModel from '../models/User.model';
 import Token from '../utils/Token';
 import TicketModel from '../models/Ticket.model';
 import Mailer from '../utils/Mailer';
-
-type mappedErrors = 'internalError' | 'noTickets' | 'notFound' | 'userNotFound' 
-  | 'eventHasPassed' | 'needInvite' | 'doNotNeedInvite';
+import EventsErrorsResponse from '../utils/EventsErrorsResponse';
+import { MappedErrors } from '../utils/EventsErrorsResponse';
 
 export default class EventService {
   private model: EventModel;
@@ -18,28 +17,13 @@ export default class EventService {
   private ticketModel: TicketModel;
   private mailer: Mailer;
 
-  private static errors = {
-    internalError: { 
-      status: 500, data: { message: 'Internal Server error' },
-    } as ErrorReturn,
-    noTickets: { status: 409, data: { message: 'No more tickets' } } as ErrorReturn,
-    notFound: { status: 404, data: { message: 'Event not found' } } as ErrorReturn,
-    userNotFound: { status: 404, data: { message: 'User not found' } } as ErrorReturn,
-    eventHasPassed: { status: 409, data: { message: 'Event has already passed' } } as ErrorReturn,
-    needInvite: { status: 401, data: { message: 'You can\'t sign to this event' } } as ErrorReturn,
-    userAlreadySigned: { 
-      status: 409, data: { message: 'User has already been signed to this event' },
-    } as ErrorReturn,
-    doNotNeedInvite: { 
-      status: 400, data: { message: 'This event do not need invite' },
-    } as ErrorReturn,
-  };
+  private static errors = EventsErrorsResponse
 
   constructor(
     model: EventModel = new EventModel(),
     userModel: UserModel = new UserModel(),
     ticketModel: TicketModel = new TicketModel(),
-    mailer: Mailer = new Mailer(),
+    mailer: Mailer = new Mailer(process.env.ADM_EMAIL || 'admin@admin.com'),
   ) {
     this.model = model;
     this.userModel = userModel;
@@ -50,7 +34,7 @@ export default class EventService {
   private mapErrors(error: Error): ErrorReturn {
     const name = error.name !== 'SequelizeUniqueConstraintError' 
       ? error.name : 'userAlreadySigned';
-    const err = EventService.errors[name as mappedErrors];
+    const err = EventService.errors[name as MappedErrors];
     if (err) return err;
     return EventService.errors.internalError;
   }
@@ -125,46 +109,15 @@ export default class EventService {
     }
   }
 
-  private async sendInviteMail(to: string, token: string, event: IEvent) {
-    const body = `
-    <h2>You were invite to an event</h2>
-    <p>Description: ${event.description}</p>
-    <p>Date: ${event.date}</p>
-    <p>Time: ${event.time}</p>
-    <p>Ticket: ${token}</p>`;
-    await this.mailer.sendMail(
-      'allexthiagodev@gmail.com',
-      to,
-      'Invite confirmation',
-      body,
-    );
-  }
-
-  private async sendSignMail(to: string, event: IEvent, token?: string) {
-    const body = `
-    <h2>You signed to an event</h2>
-    <p>Description: ${event.description}</p>
-    <p>Date: ${event.date}</p>
-    <p>Time: ${event.time}</p>
-    ${token ? `<p>Ticket: ${token}</p>` : ''}`;
-    await this.mailer.sendMail(
-      'allexthiagodev@gmail.com',
-      to,
-      'Sign confirmation',
-      body,
-    );
-  }
-
   async invite(
-    id: number | string,
-    userId: number | string,
-  ): Promise<ServiceReturn<{ message: 'User invited' }>> {
+    id: number | string, userId: number | string,
+  ):Promise<ServiceReturn<{ message: 'User invited' }>> {
     try {
       const event = await this.findEvent(id, true);
       if (!event.privateEvent) { const err = new Error(); err.name = 'doNotNeedInvite'; throw err; }
       EventService.hasTickets(event);
       const { token, userEmail } = await this.createTicket(userId, event);
-      this.sendInviteMail(userEmail, token as string, event);
+      this.mailer.sendInviteMail(userEmail, token as string, event);
       return { status: 200, data: { message: 'User invited' } };
     } catch (error) {
       return this.mapErrors(error as Error);
@@ -173,13 +126,19 @@ export default class EventService {
 
   async sign(
     id: number | string, userId: string | number,
-  ): Promise<ServiceReturn<{ message: 'User signed' }>> {
+  ): Promise<ServiceReturn<{ message: 'User signed' | 'You were invited to this event' }>> {
     try {
+      if (await this.ticketModel.getByUserAndEventIds(userId, id)) {
+        return {
+          status: 200,
+          data: { message: 'You were invited to this event' },
+        };
+      }
       const event = await this.findEvent(id);
       if (event.privateEvent) { const err = new Error(); err.name = 'needInvite'; throw err; }
       EventService.hasTickets(event);
       const { token, userEmail } = await this.createTicket(userId, event);
-      this.sendSignMail(userEmail, event, token as string | undefined);
+      this.mailer.sendSignMail(userEmail, event, token as string | undefined);
       return { status: 200, data: { message: 'User signed' } };
     } catch (error) {
       return this.mapErrors(error as Error);

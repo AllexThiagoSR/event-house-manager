@@ -51,4 +51,9 @@ export default class EventModel {
     const event = await this.model.update({ ticketsQuantity: newQuantity }, { where: { id } });
     return event;
   }
+
+  async update(id: number | string, data: Partial<IEvent>) {
+    const event = await this.model.update(data, { where: { id } });
+    return event;
+  }
 }

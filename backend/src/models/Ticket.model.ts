@@ -7,4 +7,9 @@ export default class TicketModel {
     const ticket = await this.model.create(data);
     return ticket.dataValues;
   }
+
+  public async getByUserAndEventIds(userId: string | number, eventId: string | number) {
+    const ticket = await this.model.findOne({ where: { userId, eventId } })
+    return ticket;
+  }
 }

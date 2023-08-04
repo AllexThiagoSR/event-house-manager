@@ -52,6 +52,9 @@ export default class EventService {
 
   async create(event: NewEntity<IEvent>): Promise<ServiceReturn<IEvent>> {
     try {
+      if (event.privateEvent === true) {
+        event.needTicket = true;
+      }
       const newEvent = await this.model.create(event);
       return { status: 201 , data: newEvent };
     } catch (error) {
@@ -129,13 +132,11 @@ export default class EventService {
     id: number | string, userId: string | number,
   ): Promise<ServiceReturn<{ message: 'User signed' | 'You were invited to this event' }>> {
     try {
-      if ((await this.ticketModel.getByUserAndEventIds(userId, id))?.ticketToken) {
-        return {
-          status: 200,
-          data: { message: 'You were invited to this event' },
-        };
-      }
+      const ticket = (await this.ticketModel.getByUserAndEventIds(userId, id))?.ticketToken;
       const event = await this.findEvent(id);
+      if (ticket !== undefined && event.privateEvent) {
+        return { status: 200, data: { message: 'You were invited to this event' } };
+      }
       if (event.privateEvent) { const err = new Error(); err.name = 'needInvite'; throw err; }
       EventService.hasTickets(event);
       const { token, userEmail } = await this.createTicket(userId, event);
@@ -165,6 +166,7 @@ export default class EventService {
       await this.model.update(id, data);
       const event = await this.findEvent(id, true);
       if (!event) { const err = new Error(); err.name = 'notFound'; throw err; }
+      this.mailer.sendManyMails(event as EventWithUsers, 'Updated');
       return { status: 200, data: event }
     } catch (error) {
       return this.mapErrors(error as Error);

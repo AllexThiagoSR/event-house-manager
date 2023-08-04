@@ -66,7 +66,7 @@ export default class Mailer {
   async sendDeletedEventMail(to: string, event: IEvent) {
     const body = `
     <h2>Canceled event</h2>
-    <p>A event that you were registered was canceled</p>
+    <p>An event that you were registered was canceled</p>
     <p>Description: ${event.description}</p>
     <p>Date: ${event.date}</p>
     <p>Time: ${event.time}</p>
@@ -79,7 +79,23 @@ export default class Mailer {
     );
   }
 
-  async sendManyMails(event: EventWithUsers, type: 'Deleted') {
+  async sendUpdatedEventMail(to: string, event: IEvent) {
+    const body = `
+    <h2>Updated event</h2>
+    <p>An event you registered for has been updated, its new information is below</p>
+    <p>Description: ${event.description}</p>
+    <p>Date: ${event.date}</p>
+    <p>Time: ${event.time}</p>
+    `;
+    await this.sendMail(
+      this.adminMail,
+      to,
+      'Update notification',
+      body,
+    );
+  }
+
+  async sendManyMails(event: EventWithUsers, type: 'Deleted' | 'Updated') {
     event.signedUsers.forEach(async ({ email }) => {
       await this[`send${type}EventMail`](email, event);
       console.log('Mail sent');

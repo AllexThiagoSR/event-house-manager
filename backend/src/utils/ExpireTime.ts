@@ -20,7 +20,7 @@ export default class ExpireTime {
     const days = diff / 1000 / 60 / 60 / 24;
     if (days < 0) { 
       const err = new Error();
-      err.name = 'eventHasPassed';
+      err.name = 'expireTimeHasPassed';
       throw err;
     }
     return Math.ceil(days);

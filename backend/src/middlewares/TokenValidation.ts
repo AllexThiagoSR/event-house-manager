@@ -18,7 +18,7 @@ export default class TokenValidation {
   public validatePermission(_req: Request, res: Response, next: NextFunction) {
     const user = res.locals.user;
     if (user.roleId !== 1) {
-      return res.status(401).json({ message: 'Only admins can invite users' })
+      return res.status(401).json({ message: 'Only admins can access this end-point' })
     }
     return next();
   }

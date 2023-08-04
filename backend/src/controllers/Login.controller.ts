@@ -9,8 +9,6 @@ export default class LoginController {
   }
 
   public async login(req: Request, res: Response) {
-    console.log('asdasdjs');
-    
     const { status, data } = await this.service.login(req.body);
     return res.status(status).json(data);
   }

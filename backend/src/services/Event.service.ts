@@ -157,4 +157,17 @@ export default class EventService {
       return this.mapErrors(error as Error);
     }
   }
+
+  async update(
+    id: string | number, data: Partial<IEvent>,
+  ): Promise<ServiceReturn<IEvent>> {
+    try {
+      await this.model.update(id, data);
+      const event = await this.findEvent(id, true);
+      if (!event) { const err = new Error(); err.name = 'notFound'; throw err; }
+      return { status: 200, data: event }
+    } catch (error) {
+      return this.mapErrors(error as Error);
+    }
+  }
 }

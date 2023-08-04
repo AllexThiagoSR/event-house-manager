@@ -39,4 +39,9 @@ export default class EventController {
     const { status, data } = await this.service.deleteEvent(req.params.id);
     return res.status(status).json(data);
   }
+
+  async update(req: Request, res: Response) {
+    const { status, data } = await this.service.update(req.params.id, req.body);
+    return res.status(status).json(data);
+  }
 }

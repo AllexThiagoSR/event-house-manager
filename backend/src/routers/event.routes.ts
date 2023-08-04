@@ -24,7 +24,7 @@ router.post(
   '/',
   (req, res, next) => tokenMiddleware.validate(req, res, next),
   (req, res, next) => tokenMiddleware.validatePermission(req, res, next),
-  (req, res, next) => fieldsMiddleware.validate(req, res, next),
+  (req, res, next) => fieldsMiddleware.validateCreationFields(req, res, next),
   (req, res) => controller.create(req, res),
 );
 
@@ -46,6 +46,13 @@ router.delete(
   (req, res, next) => tokenMiddleware.validate(req, res, next),
   (req, res, next) => tokenMiddleware.validatePermission(req, res, next),
   (req, res) => controller.deleteEvent(req, res),
+);
+
+router.patch(
+  '/:id',
+  (req, res, next) => tokenMiddleware.validate(req, res, next),
+  (req, res, next) => tokenMiddleware.validatePermission(req, res, next),
+  (req, res) => controller.update(req, res),
 );
 
 export default router;

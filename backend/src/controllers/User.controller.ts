@@ -12,4 +12,9 @@ export default class UserController {
     const { status, data } = await this.service.create(req.body);
     return res.status(status).json(data);
   }
+
+  async deleteUser(_req: Request, res: Response) {
+    const { status, data } = await this.service.deleteUser(res.locals.user.id);
+    return res.status(status).json(data);
+  }
 }

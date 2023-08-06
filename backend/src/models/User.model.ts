@@ -25,4 +25,9 @@ export default class UserModel implements IUserModel {
     const newUser = await this.model.create(data);
     return newUser.dataValues;
   }
+
+  public async deleteUser(id: string | number) {
+    const affectedRows = await this.model.destroy({ where: { id } });
+    return affectedRows;
+  }
 }

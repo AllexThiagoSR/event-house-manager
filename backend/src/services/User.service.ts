@@ -1,11 +1,12 @@
 import NewEntity from '../interfaces/NewEntity';
 import UserModel from '../models/User.model';
 import IUser from '../interfaces/IUser';
-import ServiceReturn from '../interfaces/ServiceReturn';
+import ServiceReturn, { ErrorReturn } from '../interfaces/ServiceReturn';
 import BCrypt from '../utils/BCrypt';
 
 export default class UserService {
   private model: UserModel;
+  private internalError = { status: 500, data: { message: 'Internal sever error' } } as ErrorReturn;
 
   constructor(m: UserModel = new UserModel()) {
     this.model = m
@@ -20,7 +21,16 @@ export default class UserService {
       if ((error as Error).name === 'SequelizeUniqueConstraintError') {
         return { status: 409, data: { message: 'Email already registered' } };
       }
-      return { status: 500, data: { message: 'Internal server error' } };
+      return this.internalError;
+    }
+  }
+
+  async deleteUser(id: number | string): Promise<ServiceReturn<undefined>> {
+    try {
+      await this.model.deleteUser(id);
+      return { status: 204, data: undefined };
+    } catch (error) {
+      return this.internalError;
     }
   }
 }

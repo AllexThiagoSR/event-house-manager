@@ -1,5 +1,7 @@
 # Event House Manager
 
+## Esboço da arquitetura da aplicação
+
 ## Requerimentos
 
 - Git
@@ -57,7 +59,7 @@ CONTAINER ID   IMAGE                     COMMAND                  CREATED       
 
 Após os passos anteriores a aplicação estará exposta na porta 3001 do localhost. É possível acessar atráves do link base `http://localhost:3001`.
 
-## Visualização do relacionamento entre as tabelas do banco de dados da Biblioteca Nacional
+## Visualização do relacionamento entre as tabelas do banco de dados do Event House Manager
 
   <img width="100%" align="center" src="./tables.png" />
   <br></br>

@@ -17,7 +17,7 @@ export default class UserModel implements IUserModel {
   }
 
   public async getById(id: string | number): Promise<IUser | undefined> {
-    const user = await this.model.findByPk(id);
+    const user = await this.model.findByPk(id, { attributes: { exclude: ['password'] } });
     return user?.dataValues;
   }
 
@@ -28,6 +28,11 @@ export default class UserModel implements IUserModel {
 
   public async deleteUser(id: string | number) {
     const affectedRows = await this.model.destroy({ where: { id } });
+    return affectedRows;
+  }
+
+  public async update(id: string | number, newData: Partial<IUser>) {
+    const affectedRows = await this.model.update(newData, { where: { id } });
     return affectedRows;
   }
 }

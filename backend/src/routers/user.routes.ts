@@ -20,4 +20,11 @@ router.delete(
   (req, res) => controller.deleteUser(req, res),
 );
 
+router.patch(
+  '/',
+  (req, res, next) => tokenMiddleware.validate(req, res, next),
+  (req, res, next) => middleware.validateUpdate(req, res, next),
+  (req, res) => controller.update(req, res),
+);
+
 export default router;

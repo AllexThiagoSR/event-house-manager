@@ -33,4 +33,17 @@ export default class UserService {
       return this.internalError;
     }
   }
+
+  async update(
+    id: number | string, newData: Partial<IUser>,
+  ): Promise<ServiceReturn<IUser>> {
+    try {
+      await this.model.update(id, newData);
+      const user = await this.model.getById(id);
+      if (!user) return { status: 400, data: { message: 'User not found' } };
+      return { status: 200, data: user };
+    } catch (error) {
+      return this.internalError;
+    }
+  }
 }

@@ -17,4 +17,9 @@ export default class UserController {
     const { status, data } = await this.service.deleteUser(res.locals.user.id);
     return res.status(status).json(data);
   }
+
+  async update(req: Request, res: Response) {
+    const { status, data } = await this.service.update(res.locals.user.id, req.body);
+    return res.status(status).json(data);
+  }
 }

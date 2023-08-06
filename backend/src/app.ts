@@ -1,12 +1,13 @@
 import * as express from 'express';
 import * as cors from 'cors';
+import router from './routers';
 export class App {
   private app = express();
 
   constructor() {
     this.config();
     this.app.get('/', (_req, res) => res.status(200).json('APP is running'));
-    this.routers();
+    this.routes();
   }
   private config():void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
@@ -21,10 +22,12 @@ export class App {
     this.app.use(accessControl);
   }
 
-  private routers() {}
-
   public start(PORT: number | string) {
     this.app.listen(PORT);
+  }
+
+  private routes() {
+    this.app.use(router);
   }
 }
 

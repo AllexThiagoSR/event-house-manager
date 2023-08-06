@@ -2,6 +2,9 @@
 
 ## Esboço da arquitetura da aplicação
 
+<img width="100%" align="center" src="./app-architecture.png" />
+<br></br>
+
 ## Requerimentos
 
 - Git

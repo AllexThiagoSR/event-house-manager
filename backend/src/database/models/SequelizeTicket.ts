@@ -1,4 +1,5 @@
-import { DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import {
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import db from '.';
 
 class SequelizeTicket extends Model<
@@ -8,7 +9,7 @@ class SequelizeTicket extends Model<
   declare userId: number;
   declare eventId: number;
   declare ticketToken: string | null;
-  declare used: boolean;
+  declare used: CreationOptional<boolean>;
 }
 
 SequelizeTicket.init(
@@ -18,6 +19,7 @@ SequelizeTicket.init(
       primaryKey: true,
       allowNull: false,
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
       references: {
         key: 'id',
         model: 'users',
@@ -28,6 +30,7 @@ SequelizeTicket.init(
       primaryKey: true,
       allowNull: false,
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
       references: {
         key: 'id',
         model: 'events',
@@ -40,6 +43,7 @@ SequelizeTicket.init(
     used: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     }
   },
   {

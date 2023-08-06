@@ -1,6 +1,7 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
-import db from ".";
-import SequelizeRole from "./SequelizeRole";
+import { 
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import db from '.';
+import SequelizeRole from './SequelizeRole';
 
 class SequelizeUser extends Model<
   InferAttributes<SequelizeUser>,
@@ -28,6 +29,7 @@ SequelizeUser.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,

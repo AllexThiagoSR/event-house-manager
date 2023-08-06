@@ -1,4 +1,4 @@
-import EntireDate from "../interfaces/Date";
+import EntireDate from '../interfaces/Date';
 
 export default class ExpireTime {
   private _date: Date;
@@ -18,6 +18,11 @@ export default class ExpireTime {
   getTicketExpireTime() {
     const diff = this._date.getTime() - new Date().getTime();
     const days = diff / 1000 / 60 / 60 / 24;
+    if (days < 0) { 
+      const err = new Error();
+      err.name = 'expireTimeHasPassed';
+      throw err;
+    }
     return Math.ceil(days);
   }
 }

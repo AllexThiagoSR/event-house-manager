@@ -59,7 +59,7 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ## Visualização do relacionamento entre as tabelas do banco de dados da Biblioteca Nacional
 
-  <img width="100%" align="center" src="tables.png" />
+  <img width="100%" align="center" src="./tables.png" />
   <br></br>
 
 ## Tecnologias utilizadas

@@ -1,4 +1,4 @@
-# Event House Manager
+# Event House Manager <a href="https://github.com/AllexThiagoSR/event-house-manager/blob/main/README-en.md" >English version</a>
 
   Backend de uma aplicação para gerenciar uma casa de eventos. 
 

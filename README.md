@@ -109,10 +109,13 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
     }
 
 ### Resposta
-    Status 200
-    {
-      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InVzZXIiLCJyb2xlSWQiOjIsImlhdCI6MTY5MTE4MDM5MCwiZXhwIjoxNjkxNzg1MTkwfQ.DUtJDJcos8X9c8P9nwoRuX9FBbRPK53QtNA6c2nx6M8"
-    }
+  Status 200 OK
+    
+```json
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InVzZXIiLCJyb2xlSWQiOjIsImlhdCI6MTY5MTE4MDM5MCwiZXhwIjoxNjkxNzg1MTkwfQ.DUtJDJcos8X9c8P9nwoRuX9FBbRPK53QtNA6c2nx6M8"
+}
+```
 
 
 ## Listar todos os eventos - Logado como um usuário
@@ -130,27 +133,29 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
 
-    Status 200
-    [
-      {
-        "id": 2,
-        "description": "A public event to test",
-        "date": "2023-10-11",
-        "time": "18:00:00",
-        "privateEvent": false,
-        "ticketsQuantity": 1,
-        "needTicket": true
-      },
-      {
-        "id": 3,
-        "description": "A public event to test 2",
-        "date": "2023-10-11",
-        "time": "18:00:00",
-        "privateEvent": false,
-        "ticketsQuantity": null,
-        "needTicket": false
-      }
-    ]
+  Status 200 OK
+```json
+[
+    {
+      "id": 2,
+      "description": "A public event to test",
+      "date": "2023-10-11",
+      "time": "18:00:00",
+      "privateEvent": false,
+      "ticketsQuantity": 1,
+      "needTicket": true
+    },
+    {
+      "id": 3,
+      "description": "A public event to test 2",
+      "date": "2023-10-11",
+      "time": "18:00:00",
+      "privateEvent": false,
+      "ticketsQuantity": null,
+      "needTicket": false
+    }
+  ]
+```
 
 
 ## Listar todos os eventos - Logado como administrador
@@ -168,39 +173,41 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
-    [
-      {
-        "id": 1,
-        "description": "A private event to test",
-        "date": "2023-10-11",
-        "time": "18:00:00",
-        "privateEvent": true,
-        "ticketsQuantity": 1,
-        "needTicket": true,
-        "signedUsers": []
-      },
-      {
-        "id": 2,
-        "description": "A public event to test",
-        "date": "2023-10-11",
-        "time": "18:00:00",
-        "privateEvent": false,
-        "ticketsQuantity": 1,
-        "needTicket": true,
-        "signedUsers": []
-      },
-      {
-        "id": 3,
-        "description": "A public event to test 2",
-        "date": "2023-10-11",
-        "time": "18:00:00",
-        "privateEvent": false,
-        "ticketsQuantity": null,
-        "needTicket": false,
-        "signedUsers": []
-      }
-    ]
+  Status 200 OK
+```json
+[
+  {
+    "id": 1,
+    "description": "A private event to test",
+    "date": "2023-10-11",
+    "time": "18:00:00",
+    "privateEvent": true,
+    "ticketsQuantity": 1,
+    "needTicket": true,
+    "signedUsers": []
+  },
+  {
+    "id": 2,
+    "description": "A public event to test",
+    "date": "2023-10-11",
+    "time": "18:00:00",
+    "privateEvent": false,
+    "ticketsQuantity": 1,
+    "needTicket": true,
+    "signedUsers": []
+  },
+  {
+    "id": 3,
+    "description": "A public event to test 2",
+    "date": "2023-10-11",
+    "time": "18:00:00",
+    "privateEvent": false,
+    "ticketsQuantity": null,
+    "needTicket": false,
+    "signedUsers": []
+  }
+]
+```
 
 
 ## Listar um evento pelo id - Logado como usuário
@@ -218,16 +225,18 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
-    {
-      "id": 2,
-      "description": "A public event to test",
-      "date": "2023-10-11",
-      "time": "18:00:00",
-      "privateEvent": false,
-      "ticketsQuantity": 1,
-      "needTicket": true
-    }
+  Status 200 OK
+```json
+{
+  "id": 2,
+  "description": "A public event to test",
+  "date": "2023-10-11",
+  "time": "18:00:00",
+  "privateEvent": false,
+  "ticketsQuantity": 1,
+  "needTicket": true
+}
+```
 
 
 ## Listar um evento pelo id - Logado como administrador
@@ -245,17 +254,19 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
-    {
-      "id": 1,
-      "description": "A private event to test",
-      "date": "2023-10-11",
-      "time": "18:00:00",
-      "privateEvent": true,
-      "ticketsQuantity": 1,
-      "needTicket": true,
-      "signedUsers": []
-    }
+  Status 200 OK
+```json
+{
+  "id": 1,
+  "description": "A private event to test",
+  "date": "2023-10-11",
+  "time": "18:00:00",
+  "privateEvent": true,
+  "ticketsQuantity": 1,
+  "needTicket": true,
+  "signedUsers": []
+}
+```
 
 
 ## Convidar um usuário para um evento
@@ -273,10 +284,13 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 201
-    {
-      "message": "User invited"
-    }
+  Status 201 CREATED
+    
+```json
+{
+  "message": "User invited"
+}
+```
 
 
 ## Inscrever-se em um evento
@@ -294,10 +308,13 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
-    {
-      "message": "User signed"
-    }
+  Status 200 OK
+  
+```json
+{
+  "message": "User signed"
+}
+```
 
 
 ## Criar um evento
@@ -324,17 +341,20 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 201
-    {
-      "id": 4,
-      "description": "A event to test the API",
-      "date": "2023-10-11",
-      "time": "18:00:00",
-      "privateEvent": true,
-      "ticketsQuantity": 30,
-      "needTicket": true
-    }
+  Status 201 CREATED
 
+
+```json
+{
+  "id": 4,
+  "description": "An event to test the API",
+  "date": "2023-10-11",
+  "time": "18:00:00",
+  "privateEvent": true,
+  "ticketsQuantity": 30,
+  "needTicket": true
+}
+```
 
 ## Atualizar informações de um evento
   Esse end-point só pode ser acessado por administradores.
@@ -357,30 +377,33 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
+  Status 200 OK
+
+```json
+{
+  "id": 3,
+  "description": "Updating this to test",
+  "date": "2023-10-12",
+  "time": "18:30:00",
+  "privateEvent": false,
+  "ticketsQuantity": null,
+  "needTicket": false,
+  "signedUsers": [
     {
-      "id": 3,
-      "description": "Updating this to test",
-      "date": "2023-10-12",
-      "time": "18:30:00",
-      "privateEvent": false,
-      "ticketsQuantity": null,
-      "needTicket": false,
-      "signedUsers": [
-        {
-          "id": 1,
-          "name": "ADM",
-          "email": "allexthiagodev@gmail.com",
-          "roleId": 1
-        },
-        {
-          "id": 2,
-          "name": "user",
-          "email": "user@gmail.com",
-          "roleId": 2
-        }
-      ]
+      "id": 1,
+      "name": "ADM",
+      "email": "allexthiagodev@gmail.com",
+      "roleId": 1
+    },
+    {
+      "id": 2,
+      "name": "user",
+      "email": "user@gmail.com",
+      "roleId": 2
     }
+  ]
+}
+```
 
 
 ## Deletar informações de um evento
@@ -398,8 +421,7 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 204
-    No content
+  Status 204 NO CONTENT
 
 
 ## Criar um usuário
@@ -419,13 +441,16 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 201
-    {
-      "id": 3,
-      "name": "User Name",
-      "email": "user@gmail.com",
-      "roleId": 2
-    }
+  Status 201 CREATED
+
+```json
+{
+  "id": 3,
+  "name": "User Name",
+  "email": "user@gmail.com",
+  "roleId": 2
+}
+```
 
 
 ## Atualizar informações do usuário logado
@@ -433,7 +458,7 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Requisição
 
-`DELETE /users`
+`PATCH /users`
 
     http://localhost:3001/users
 
@@ -448,13 +473,16 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 200
-    {
-      "id": 3,
-      "name": "New User Name",
-      "email": "newuser@gmail.com",
-      "roleId": 2
-    }
+  Status 200 OK
+
+```json
+{
+  "id": 3,
+  "name": "New User Name",
+  "email": "newuser@gmail.com",
+  "roleId": 2
+}
+```
 
 
 ## Deletar informações do usuário logado
@@ -472,5 +500,4 @@ Após os passos anteriores a aplicação estará exposta na porta 3001 do localh
 
 ### Resposta
   
-    Status 204
-    No content
+  Status 204 NO CONTENT
